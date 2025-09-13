@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>League of Legends Items</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      padding: 20px;
+    }
+
+    .item-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 16px;
+    }
+
+
+    .item {
+      text-align: center;
+      background: #1c1c1c;
+      border-radius: 10px;
+      padding: 10px;
+      transition: transform 0.2s;
+    }
+
+    .item:hover {
+      transform: scale(1.05);
+    }
+
+    .item img {
+      width: 64px;
+      height: 64px;
+    }
+
+    .item-name {
+      margin-top: 8px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>League of Legends Items</h1>
+  <div class="item-container" id="items"></div>
+
+  <script>
+    async function fetchItems() {
+      try {
+        const versionRes = await fetch("https://ddragon.leagueoflegends.com/api/versions.json");
+        const versions = await versionRes.json();
+        const latestVersion = versions[0];
+
+        const itemsRes = await fetch(`https://ddragon.leagueoflegends.com/cdn/${latestVersion}/data/en_US/item.json`);
+        const itemsData = await itemsRes.json();
+
+        const items = itemsData.data;
+        const itemsContainer = document.getElementById("items");
+
+        Object.values(items).forEach(item => {
+          const itemDiv = document.createElement("div");
+          itemDiv.className = "item";
+          itemDiv.innerHTML = `
+            <img src="https://ddragon.leagueoflegends.com/cdn/${latestVersion}/img/item/${item.image.full}" alt="${item.name}" />
+            <div class="item-name">${item.name}</div>
+            <div class="">${item}</div>
+          `;
+
+          itemsContainer.appendChild(itemDiv);
+        })
+
+        console.log(items);
+      } catch (error) {
+        console.error("Failed to fetch items:", error);
+      }
+    }
+
+    fetchItems();
+  </script>
+</body>
+
+</html>

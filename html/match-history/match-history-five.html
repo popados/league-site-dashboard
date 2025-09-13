@@ -14,7 +14,7 @@
     }
 
     header {
-      background-color: #111;
+      background-color: #112;
       padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
@@ -125,7 +125,7 @@
       background: #2c2c2c;
       border-radius: 8px;
       padding: 12px;
-      /* display: flex; */
+      display: flex;
       align-items: center;
       gap: 15px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -140,11 +140,11 @@
       background: #333;
     }
 
-    .team-100 {
+    .team-100 .player {
       border-left: 3px solid #4422ff;
     }
 
-    .team-200 {
+    .team-200 .player {
       border-left: 3px solid #f44336;
       flex-direction: row-reverse;
     }
@@ -171,7 +171,7 @@
     .player-stats {
       display: flex;
       flex-direction: column;
-      /* align-items: center; */
+      align-items: center;
       gap: 2px;
       min-width: 60px;
     }
@@ -325,7 +325,6 @@
         player.id = participant.championName;
 
         player.innerHTML = `
-        <div>
           <img class="champion-icon-small" src="https://ddragon.leagueoflegends.com/cdn/14.9.1/img/champion/${participant.championName}.png" alt="Champ-Icon">
           <div class="player-info">
             <p style="font-weight: bold; color: ${participant.teamId === 100 ? '#4422ff' : '#f44336'}">${participant.riotIdGameName}#${participant.riotIdTagline}</p>
@@ -333,26 +332,14 @@
           </div>
           <div class="player-stats">
             <div class="kda-container">
-              <p style="font-size: 10px; color: #888;">KDA</p>
               <span class="kills">${participant.kills}</span>
               <span>/</span>
               <span class="deaths">${participant.deaths}</span>
               <span>/</span>
               <span class="assists">${participant.assists}</span>
             </div>
+            <p style="font-size: 10px; color: #888;">KDA</p>
           </div>
-          <div>
-            <span> Item: 
-              <img src="https://ddragon.leagueoflegends.com/cdn/15.11.1/img/item/${participant.item0}.png" alt=""></img>
-              <img src="https://ddragon.leagueoflegends.com/cdn/15.11.1/img/item/${participant.item1}.png" alt=""></img>
-              <img src="https://ddragon.leagueoflegends.com/cdn/15.11.1/img/item/${participant.item2}.png" alt=""></img>
-              <img src="https://ddragon.leagueoflegends.com/cdn/15.11.1/img/item/${participant.item3}.png" alt=""></img>
-              <img src="https://ddragon.leagueoflegends.com/cdn/15.11.1/img/item/${participant.item4}.png" alt=""></img>
-              <img src="https://ddragon.leagueoflegends.com/cdn/15.11.1/img/item/${participant.item5}.png" alt=""></img>
-              <img src="https://ddragon.leagueoflegends.com/cdn/15.11.1/img/item/${participant.item6}.png" alt=""></img>
-              </span>
-           </div>
-        </div>
         `;
 
         if (participant.teamId === 100) {
@@ -361,6 +348,7 @@
           team200.appendChild(player);
         }
       }
+
       return data;
     }
 

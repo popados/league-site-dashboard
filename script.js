@@ -65,7 +65,7 @@ dotenv.config();
 const app = express();
 app.use(cors());
 
-const API_KEY = "RGAPI-7ac54d10-ff8c-4b48-8228-b8d425381f56";
+const API_KEY = "RGAPI-63161e09-e1d8-4a5d-9737-477f89e3e93c";
 const REGION = "americas"; // change this as needed
 
 app.get("/api/summoner/:name/:tag", async (req, res) => {

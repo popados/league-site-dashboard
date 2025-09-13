@@ -7,71 +7,347 @@
   <title>Champion Card</title>
   <style>
     body {
-      background: #0a0a0a;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
       color: #fff;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      background: linear-gradient(45deg, #c89b3c, #f0e6d2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 15px;
+      font-size: 2.5em;
+      text-shadow: 0 0 20px rgba(200, 155, 60, 0.3);
+    }
+
+    nav {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    nav a {
+      color: #c9aa71;
+      text-decoration: none;
+      padding: 8px 15px;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+
+    nav a:hover {
+      background: rgba(200, 155, 60, 0.2);
+      border-color: #c89b3c;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(200, 155, 60, 0.3);
     }
 
     select {
-      margin-bottom: 20px;
-      padding: 10px;
+      margin-bottom: 30px;
+      padding: 12px 20px;
       font-size: 16px;
-      border-radius: 5px;
-      border: none;
+      border-radius: 25px;
+      border: 2px solid #c89b3c;
+      background: #1e1e1e;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 200px;
+    }
+
+    select:hover {
+      border-color: #f0e6d2;
+      box-shadow: 0 0 15px rgba(200, 155, 60, 0.4);
+      transform: scale(1.02);
+    }
+
+    select:focus {
+      outline: none;
+      box-shadow: 0 0 20px rgba(200, 155, 60, 0.6);
     }
 
     .card {
-      background: #1e1e1e;
-      border-radius: 10px;
-      max-width: 600px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+      border-radius: 20px;
+      max-width: 700px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+      overflow: hidden;
+      transition: all 0.4s ease;
+      border: 1px solid rgba(200, 155, 60, 0.3);
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(200, 155, 60, 0.2);
+    }
+
+    .card-header {
+      position: relative;
+      cursor: pointer;
       overflow: hidden;
     }
 
     .splash {
       width: 100%;
-      height: auto;
+      height: 300px;
+      object-fit: cover;
+      transition: all 0.6s ease;
+      filter: brightness(0.8);
+    }
+
+    .card-header:hover .splash {
+      transform: scale(1.1);
+      filter: brightness(1);
+    }
+
+    .champion-info-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+      padding: 30px 20px 20px;
+      transform: translateY(0);
+      transition: all 0.4s ease;
+    }
+
+    .champion-name {
+      font-size: 2.5em;
+      font-weight: bold;
+      margin: 0;
+      background: linear-gradient(45deg, #c89b3c, #f0e6d2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    }
+
+    .champion-title {
+      font-size: 1.1em;
+      margin: 5px 0 0 0;
+      color: #c9aa71;
+      font-style: italic;
+    }
+
+    .fold-indicator {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: rgba(200, 155, 60, 0.9);
+      color: #000;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .fold-indicator:hover {
+      background: #f0e6d2;
+      transform: scale(1.1);
     }
 
     .content {
-      padding: 20px;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.6s ease;
+      opacity: 0;
     }
 
-    .header {
+    .content.expanded {
+      max-height: 1000px;
+      opacity: 1;
+      padding: 30px;
+    }
+
+    .stats {
+      background: linear-gradient(135deg, #2a2a2a, #3a3a3a);
+      padding: 25px;
+      border-radius: 15px;
+      margin-bottom: 25px;
+      border: 1px solid rgba(200, 155, 60, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .stats:hover {
+      border-color: rgba(200, 155, 60, 0.5);
+      box-shadow: 0 0 20px rgba(200, 155, 60, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .stats h3 {
+      color: #c89b3c;
+      margin-bottom: 20px;
+      font-size: 1.5em;
       text-align: center;
-      margin-bottom: 15px;
+      border-bottom: 2px solid #c89b3c;
+      padding-bottom: 10px;
     }
 
-    .stats,
-    .abilities {
-      background: #2a2a2a;
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .stat-item {
+      background: rgba(200, 155, 60, 0.1);
       padding: 15px;
-      border-radius: 8px;
-      margin-bottom: 15px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+
+    .stat-item:hover {
+      background: rgba(200, 155, 60, 0.2);
+      border-color: rgba(200, 155, 60, 0.4);
+      transform: scale(1.05);
+    }
+
+    .stat-label {
+      font-weight: bold;
+      color: #f0e6d2;
+    }
+
+    .stat-value {
+      font-size: 1.2em;
+      color: #c89b3c;
+      font-weight: bold;
+    }
+
+    .abilities {
+      background: linear-gradient(135deg, #2a2a2a, #3a3a3a);
+      padding: 25px;
+      border-radius: 15px;
+      border: 1px solid rgba(200, 155, 60, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .abilities:hover {
+      border-color: rgba(200, 155, 60, 0.5);
+      box-shadow: 0 0 20px rgba(200, 155, 60, 0.1);
+    }
+
+    .abilities h3 {
+      color: #c89b3c;
+      margin-bottom: 20px;
+      font-size: 1.5em;
+      text-align: center;
+      border-bottom: 2px solid #c89b3c;
+      padding-bottom: 10px;
     }
 
     .ability {
       display: flex;
-      align-items: center;
-      margin-bottom: 10px;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: rgba(200, 155, 60, 0.05);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+
+    .ability:hover {
+      background: rgba(200, 155, 60, 0.15);
+      border-color: rgba(200, 155, 60, 0.3);
+      transform: translateX(10px);
+      box-shadow: -5px 0 15px rgba(200, 155, 60, 0.2);
     }
 
     .ability img {
-      width: 40px;
-      height: 40px;
-      margin-right: 10px;
+      width: 50px;
+      height: 50px;
+      margin-right: 15px;
+      border-radius: 8px;
+      border: 2px solid #c89b3c;
+      transition: all 0.3s ease;
+    }
+
+    .ability:hover img {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(200, 155, 60, 0.6);
+    }
+
+    .ability-info {
+      flex: 1;
+    }
+
+    .ability-name {
+      font-weight: bold;
+      color: #f0e6d2;
+      font-size: 1.1em;
+      margin-bottom: 5px;
+    }
+
+    .ability-description {
+      color: #ccc;
+      line-height: 1.4;
+      font-size: 0.9em;
+    }
+
+    @keyframes cardEntrance {
+      0% {
+        opacity: 0;
+        transform: translateY(50px) rotateX(20deg);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) rotateX(0);
+      }
+    }
+
+    .card {
+      animation: cardEntrance 0.8s ease-out;
+    }
+
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .champion-name {
+        font-size: 2em;
+      }
+      
+      nav {
+        gap: 10px;
+      }
+      
+      nav a {
+        padding: 6px 12px;
+        font-size: 0.9em;
+      }
     }
   </style>
 </head>
 
 <body>
-
-  <header style="display: flex;flex-direction: column;">
+  <header>
     <div>
       <h1>🌌 League Dashboard</h1>
     </div>
@@ -80,9 +356,7 @@
       <a href="./allchamps.html">🛡️ Champions</a>
       <a href="./players.html">🧑 Players</a>
       <a href="./game.html">🎮 Games</a>
-
       <a href="./match-history/match-history.html">📚 Match List</a>
-
       <a href="./settings.html">⚙️ Settings</a>
     </nav>
   </header>
@@ -90,12 +364,15 @@
   <select id="champion-select"></select>
 
   <div class="card" id="champion-card">
-    <img id="splash" class="splash" src="" alt="Champion Splash" />
-    <div class="content">
-      <div class="header">
-        <h2 id="name"></h2>
-        <h4 id="title"></h4>
+    <div class="card-header" onclick="toggleCard()">
+      <img id="splash" class="splash" src="" alt="Champion Splash" />
+      <div class="champion-info-overlay">
+        <h2 id="name" class="champion-name"></h2>
+        <h4 id="title" class="champion-title"></h4>
       </div>
+      <div class="fold-indicator" id="fold-indicator">▼</div>
+    </div>
+    <div class="content" id="content">
       <div class="stats" id="stats"></div>
       <div class="abilities" id="abilities"></div>
     </div>
@@ -103,6 +380,23 @@
 
   <script>
     const select = document.getElementById("champion-select");
+    let isCardExpanded = false;
+
+    function toggleCard() {
+      const content = document.getElementById("content");
+      const indicator = document.getElementById("fold-indicator");
+      
+      if (isCardExpanded) {
+        content.classList.remove("expanded");
+        indicator.innerHTML = "▼";
+        indicator.style.transform = "rotate(0deg)";
+      } else {
+        content.classList.add("expanded");
+        indicator.innerHTML = "▲";
+        indicator.style.transform = "rotate(180deg)";
+      }
+      isCardExpanded = !isCardExpanded;
+    }
 
     fetch("https://ddragon.leagueoflegends.com/cdn/14.9.1/data/en_US/champion.json")
       .then(res => res.json())
@@ -125,10 +419,18 @@
       const selectedChamp = select.value;
       window.history.replaceState(null, null, `?champ=${selectedChamp}`);
       loadChampion(selectedChamp);
+      
+      // Reset card to folded state when switching champions
+      const content = document.getElementById("content");
+      const indicator = document.getElementById("fold-indicator");
+      content.classList.remove("expanded");
+      indicator.innerHTML = "▼";
+      indicator.style.transform = "rotate(0deg)";
+      isCardExpanded = false;
     });
 
     function loadChampion(champId) {
-      fetch(`https://ddragon.leagueoflegends.com/cdn/14.9.1/data/en_US/champion/${champId}.json`)
+      fetch(`https://ddragon.leagueoflegends.com/cdn/6.24.1/data/en_US/champion/${champId}.json`)
         .then(res => res.json())
         .then(data => {
           const champ = data.data[champId];
@@ -139,30 +441,55 @@
 
           const stats = champ.stats;
           document.getElementById("stats").innerHTML = `
-            <h3>Stats</h3>
-            <ul>
-              <li>HP: ${stats.hp}</li>
-              <li>Attack Damage: ${stats.attackdamage}</li>
-              <li>Armor: ${stats.armor}</li>
-              <li>Magic Resist: ${stats.spellblock}</li>
-              <li>Attack Speed: ${stats.attackspeed}</li>
-              <li>Move Speed: ${stats.movespeed}</li>
-            </ul>
+            <h3>⚔️ Champion Statistics</h3>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <span class="stat-label">❤️ Health Points</span>
+                <span class="stat-value">${Math.round(stats.hp)}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">⚔️ Attack Damage</span>
+                <span class="stat-value">${Math.round(stats.attackdamage)}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">🛡️ Armor</span>
+                <span class="stat-value">${Math.round(stats.armor)}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">🔮 Magic Resist</span>
+                <span class="stat-value">${Math.round(stats.spellblock)}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">⚡ Attack Speed</span>
+                <span class="stat-value">${stats.attackspeed.toFixed(2)}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">💨 Move Speed</span>
+                <span class="stat-value">${Math.round(stats.movespeed)}</span>
+              </div>
+            </div>
           `;
 
           const abilitiesHTML = [`
-            <h3>Abilities</h3>
+            <h3>✨ Champion Abilities</h3>
             <div class="ability">
               <img src="https://ddragon.leagueoflegends.com/cdn/14.9.1/img/passive/${champ.passive.image.full}" alt="${champ.passive.name}">
-              <div><strong>${champ.passive.name} (Passive)</strong><br><small>${champ.passive.description}</small></div>
+              <div class="ability-info">
+                <div class="ability-name">${champ.passive.name} (Passive)</div>
+                <div class="ability-description">${champ.passive.description}</div>
+              </div>
             </div>
           `];
 
-          champ.spells.forEach(spell => {
+          champ.spells.forEach((spell, index) => {
+            const keys = ['Q', 'W', 'E', 'R'];
             abilitiesHTML.push(`
               <div class="ability">
                 <img src="https://ddragon.leagueoflegends.com/cdn/14.9.1/img/spell/${spell.image.full}" alt="${spell.name}">
-                <div><strong>${spell.name}</strong><br><small>${spell.description}</small></div>
+                <div class="ability-info">
+                  <div class="ability-name">${spell.name} (${keys[index]})</div>
+                  <div class="ability-description">${spell.description}</div>
+                </div>
               </div>
             `);
           });
